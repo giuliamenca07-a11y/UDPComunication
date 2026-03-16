@@ -3,23 +3,34 @@ package Server;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.util.Date;
+import java.util.Scanner;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class MainServer {
     public static void main(String[] args) {
+        System.out.printf("SERVER");
+
         try {
-            DatagramSocket datagramSocket = new DatagramSocket(3000);
-            System.out.println("Apertura porta in corso");
+            DatagramSocket dSocket = new DatagramSocket(3000);
             byte[] bufferIn = new byte[256];
-            DatagramPacket inPacket = new DatagramPacket(bufferIn, bufferIn.lenght);
-            datagramSocket.receive(inPacket);
-            InetAddres clientAddres = inPacket.getAddress();
-            int clientPort = inPacket.getPort();
-            messageIn = new String(inPacket.getData(), 0, inPacket.getLenght());
-            System.out.println("Sono il Client" + clientAddres + clientPort + messageIn);
+            DatagramPacket inputPacket = new DatagramPacket(bufferIn, bufferIn.length);
+            while(bufferIn.length!=0) {
+                dSocket.receive(inputPacket);
+                String clientMessage = new String(inputPacket.getData(), 0, inputPacket.getLength());
+                System.out.println("\nClient: " + clientMessage);
+                InetAddress clientAddress = inputPacket.getAddress();
+                int port = inputPacket.getPort();
+                System.out.println("Scrivere messaggio da mandare al client: ");
+                Scanner sc = new Scanner(System.in);
+                String message = sc.nextLine();
+                DatagramPacket outPacket = new DatagramPacket(message.getBytes(), message.length(), clientAddress, port);
+                dSocket.send(outPacket);
+            }
+            System.out.println("Fine trasmissione");
         } catch (IOException e) {
+            System.out.println("Errore.");
         }
+
     }
 }

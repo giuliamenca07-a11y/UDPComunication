@@ -1,17 +1,35 @@
 package Client;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.util.Scanner;
+
+
 public class MainClient {
     public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+        System.out.println("CLIENT");
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);
+        try {
+            InetAddress serverAddress = InetAddress.getLocalHost();
+            System.out.println("Indirizzo del server trovato");
+            while(true) {
+                DatagramSocket dSocket = new DatagramSocket();
+                System.out.println("Scrivere un messaggio da mandare al server: ");
+                Scanner sc = new Scanner(System.in);
+                String message = sc.nextLine();
+                DatagramPacket outPacket = new DatagramPacket(message.getBytes(), message.length(), serverAddress, 3000);
+                dSocket.send(outPacket);
+                byte[] bufferIn = new byte[256];
+                DatagramPacket inputPacket = new DatagramPacket(bufferIn, bufferIn.length);
+                dSocket.receive(inputPacket);
+                String Servermessage = new String(inputPacket.getData(), 0, inputPacket.getLength());
+                System.out.println("Server: " + Servermessage);
+            }
+        } catch (IOException e) {
+            System.out.println("Errore");
         }
+
     }
 }
