@@ -29,7 +29,9 @@ public class MainClient {
             }
         } catch (IOException e) {
             System.out.println("Errore");
-        }
+        } finally {
+        //dSocket.close();
+    }
 
     }
 }

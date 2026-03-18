@@ -7,7 +7,8 @@ import java.net.InetAddress;
 import java.util.Date;
 import java.util.Scanner;
 
-public class MainServer {
+public class
+MainServer {
     public static void main(String[] args) {
         System.out.printf("SERVER");
 
